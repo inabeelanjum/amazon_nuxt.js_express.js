@@ -1,9 +1,22 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const User = require('./models/user');
 const app = express ();
-
+dotenv.config();
+mongoose.connect( 
+    process.env.DATABASE ,
+{ useUnifiedTopology: true ,  useNewUrlParser: true  } , 
+(err)=>{
+if(err){
+    console.log(err);
+}
+else{
+    console.log("database connected");
+}
+})
 
 // Middlewares //
 app.use(morgan('dev'));
@@ -19,7 +32,18 @@ app.get('/' ,(req,res)=>{
 //send data from front end to backend
 app.post("/", ( req , res) =>
 {
-    console.log(req.body.name);
+    let user = new User();
+    user.name = req.body.name;
+    user.email = req.body.email;
+    user.password = req.body.password;
+    user.save( err => {
+        if(err){
+            res.json(err);
+        }
+        else{
+            res.json("success");
+        }
+    })
 });
 
 
@@ -29,6 +53,6 @@ app.listen(3000, (err)=>{
         console.log(err)
     }
     else {
-        console.log("listening on Port" ,3000)
+        console.log("listening on Port " ,3000)
     }
 });
