@@ -56,4 +56,53 @@ router.get("/products/:id", async (req, res) => {
 	}
 });
 
+// update single product
+router.put("/products/:id", upload.single("photo"), async (req, res) => {
+	try {
+		let product = await Product.findOneAndUpdate(
+			{ _id: req.params.id },
+			{
+				$set: {
+					title: req.body.title,
+					description: req.body.description,
+					photo: req.file.location,
+					price: req.body.price,
+					stockQuantity: req.body.stockQuantity,
+					category: req.body.categoryID,
+					owner: req.body.ownerID,
+				},
+			},
+			{ upsert: true }
+		);
+		res.json({
+			sucess: true,
+			updatedProduct: product,
+		});
+	} catch (error) {
+		res.status(500).json({
+			sucess: false,
+			message: error.message,
+		});
+	}
+});
+// Delete a single product
+
+router.delete("/products/:id", async (req, res) => {
+	try {
+		let deleteProduct = await Product.findOneAndDelete({
+			_id: req.params.id,
+		});
+		if (deleteProduct) {
+			res.json({
+				sucess: true,
+				message: "sucessfully Deleted",
+			});
+		}
+	} catch (error) {
+		res.status(500).json({
+			sucess: false,
+			message: error.message,
+		});
+	}
+});
 module.exports = router;
