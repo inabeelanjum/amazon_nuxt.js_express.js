@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const User = require("./models/user");
+const cors = require("cors");
 const app = express();
 dotenv.config();
 mongoose.connect(
@@ -20,6 +21,7 @@ mongoose.connect(
 );
 
 // Middlewares //
+app.use(cors());
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
