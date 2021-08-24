@@ -2,9 +2,8 @@
 const express = require("express");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
+const mongoose = require("mongoose"); //user model remove kia hai idr sy if any error occurs
 const dotenv = require("dotenv");
-const User = require("./models/user");
 const cors = require("cors");
 const app = express();
 dotenv.config();
@@ -30,9 +29,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const productRoutes = require("./routes/products");
 const categoryRoutes = require("./routes/category");
 const ownerRoutes = require("./routes/owner");
+const userRoutes = require("./routes/auth");
 app.use("/api", productRoutes);
 app.use("/api", categoryRoutes);
 app.use("/api", ownerRoutes);
+app.use("/api", userRoutes);
 
 app.listen(8000, (err) => {
 	if (err) {
